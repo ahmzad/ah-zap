@@ -114,6 +114,9 @@
     </div><div class="form-group">
     <button type="submit">Send Message</button></div>
     <div id="response"></div></form> </div></center></section>
+    <div id="success-toast" class="toast" style="display: none;">
+  <img src="notification.png" alt="success" width="200" />
+</div>
   <br><br><br>
   </div></div>
   <footer id="footer">
@@ -126,23 +129,42 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("s3nu3vk4XYjP4eQQf"); // Apna Public Key yahan daalein
-      console.log("EmailJS initialized with Public Key:", "s3nu3vk4XYjP4eQQf");
-    })();
+  emailjs.init("s3nu3vk4XYjP4eQQf");
+})();
 
-    document.getElementById('contact-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-      console.log("Form submitted. Data:", this);
-      emailjs.sendForm('service_ao07u6g', 'template_jpmruzx', this)
-        .then(function(response) {
-          console.log("Success:", response);
-          document.getElementById('response').innerHTML = "Message sent successfully!";
-          this.reset();
-        }, function(error) {
-          console.log("Error:", error);
-          document.getElementById('response').innerHTML = "Failed to send message: " + error.text;
-        });
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const form = this;
+  const button = form.querySelector("button");
+  const responseDiv = document.getElementById('response');
+  const toast = document.getElementById('success-toast');
+
+  // Show "Sending..."
+  button.disabled = true;
+  button.textContent = "Sending...";
+
+  emailjs.sendForm('service_ao07u6g', 'template_jpmruzx', form)
+    .then(function(response) {
+      console.log("Success:", response);
+      responseDiv.innerHTML = ""; // Clear response message
+      form.reset(); // Clear form fields
+      button.textContent = "Send Message";
+      button.disabled = false;
+
+      // Show toast notification
+      toast.style.display = 'block';
+
+      // Hide after 3 seconds
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }, function(error) {
+      console.log("Error:", error);
+      responseDiv.innerHTML = "Failed to send message: " + error.text;
+      button.textContent = "Send Message";
+      button.disabled = false;
     });
+});
   </script>
 
 </html>

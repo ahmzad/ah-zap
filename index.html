@@ -13,6 +13,9 @@
 
 </head>
 <body>
+  <div id="loader">
+  <div class="spinner"></div>
+</div>
   <section id="home">
      <header>
     <div><a href="index.html"><img src="logo3.png" alt="" height="40"></a></div>
@@ -38,43 +41,42 @@
     <a href="#aboutus" style="text-decoration: none; color: white;">About us</a>
   </div>
   <div class="slider-container">
-  <div class="slide active" style="background-image: url('back1.png');">
+  <div class="slide active" style="background-image: url(back1.png);">
     <div class="overlay"></div>
      <img src="islamah.png" alt="" height="150px">
     <div class="content">
-     
-      <h1>Welcome to AH ZAP</h1>
-      <h3>.................</h3>
-      <p>subscribe us to join </p>
+       <h1>Welcome to AH ZAP</h1><p class="typewriter">Join AH ZAP — where faith, stories, and smiles come together.</p>
+      
       <button><a href="#channels" style="text-decoration: none; color: white;">Get started</a></button>
+      
     </div>
   </div>
-  <div class="slide" style="background-image: url('back2.png');">
+  <div class="slide active" style="background-image: url(back2.png);">
     <div class="overlay"></div>
-    <img src="ahstories.png" alt="" height="150px">
+     <img src="ahstories.png" alt="" height="150px">
     <div class="content">
-      
-      <h1>Welcome to AH ZAP</h1>
-      <h3>.................</h3>
-      <p>subscribe us to join</p>
+       <h1>Welcome to AH ZAP</h1>
+       <p class="typewriter">Join AH ZAP — where faith, stories, and smiles come together.</p>
+
       
       <button><a href="#channels" style="text-decoration: none; color: white;">Get started</a></button>
       
     </div>
   </div>
-  <div class="slide" style="background-image: url('back3.jpg');">
+  <div class="slide" style="background-image: url(back3.jpg);">
     <div class="overlay"></div>
     <img src="laughwithah.png" alt="" height="150px">
     <div class="content">
-      
-      <h1>Welcome to AH ZAP</h1>
-      <h3>..................</h3>
-      <p>subscribe us to join</p>
+       <h1>Welcome to AH ZAP</h1>
+       <p class="typewriter">Join AH ZAP — where faith, stories, and smiles come together.</p>
       
       <button><a href="#channels" style="text-decoration: none; color: white;">Get started</a></button>
     </div>
   </div>
 </div>
+      
+     
+
     </section>
     <div class="back"><section id="channels"></section>
       <center><h1 style="color: rgb(89, 242, 253); font-size: 50px;">Channels</h1></center>
@@ -100,8 +102,8 @@
 </svg></a>
 </div>
         </div></center></section>
-        <section id="contactus"></section>
-        <div id="Contact-form" >
+        <section id="contactus">
+<div>
     <center><h1 style="color: rgb(89, 242, 253);">GET IN TOUCH</h1></center>
   <center><div id="border"><h2 style="color: rgb(89, 242, 253);">Send a message</h2>
     
@@ -118,6 +120,9 @@
     </div><div class="form-group">
     <button type="submit">Send Message</button></div>
     <div id="response"></div></form> </div></center></section>
+<div id="success-toast" class="toast" style="display: none;">
+  <img src="notification.png" alt="success" width="200" />
+</div>
   <br><br><br>
   </div></div>
   <footer id="footer">
@@ -130,23 +135,42 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("s3nu3vk4XYjP4eQQf"); // Apna Public Key yahan daalein
-      console.log("EmailJS initialized with Public Key:", "s3nu3vk4XYjP4eQQf");
-    })();
+  emailjs.init("s3nu3vk4XYjP4eQQf");
+})();
 
-    document.getElementById('contact-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-      console.log("Form submitted. Data:", this);
-      emailjs.sendForm('service_ao07u6g', 'template_jpmruzx', this)
-        .then(function(response) {
-          console.log("Success:", response);
-          document.getElementById('response').innerHTML = "Message sent successfully!";
-          this.reset();
-        }, function(error) {
-          console.log("Error:", error);
-          document.getElementById('response').innerHTML = "Failed to send message: " + error.text;
-        });
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const form = this;
+  const button = form.querySelector("button");
+  const responseDiv = document.getElementById('response');
+  const toast = document.getElementById('success-toast');
+
+  // Show "Sending..."
+  button.disabled = true;
+  button.textContent = "Sending...";
+
+  emailjs.sendForm('service_ao07u6g', 'template_jpmruzx', form)
+    .then(function(response) {
+      console.log("Success:", response);
+      responseDiv.innerHTML = ""; // Clear response message
+      form.reset(); // Clear form fields
+      button.textContent = "Send Message";
+      button.disabled = false;
+
+      // Show toast notification
+      toast.style.display = 'block';
+
+      // Hide after 3 seconds
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }, function(error) {
+      console.log("Error:", error);
+      responseDiv.innerHTML = "Failed to send message: " + error.text;
+      button.textContent = "Send Message";
+      button.disabled = false;
     });
+});
   </script>
 
 </html>
